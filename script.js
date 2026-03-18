@@ -271,10 +271,12 @@ function buildDots() {
 function goToSlide(index) {
     const total = getTotalSlides();
     currentSlide = Math.max(0, Math.min(index, total - 1));
-    const card = cards[0];
-    const gap = 24;
-    const cardWidth = card.offsetWidth + gap;
-    track.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
+    const cardStyle = window.getComputedStyle(cards[0]);
+    const cardWidth = cards[0].offsetWidth;
+    const trackStyle = window.getComputedStyle(track);
+    const gap = parseFloat(trackStyle.columnGap) || parseFloat(trackStyle.gap) || 24;
+    const offset = currentSlide * (cardWidth + gap);
+    track.style.transform = `translateX(-${offset}px)`;
     updateDots();
     resetAutoplay();
 }
