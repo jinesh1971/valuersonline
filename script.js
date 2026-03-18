@@ -235,6 +235,102 @@ contactForm.addEventListener('submit', async (e) => {
     }
 });
 
+// ===== TESTIMONIALS CAROUSEL =====
+const track = document.getElementById('testimonials-track');
+const prevBtn = document.getElementById('testimonial-prev');
+const nextBtn = document.getElementById('testimonial-next');
+const dotsContainer = document.getElementById('testimonials-dots');
+const cards = track.querySelectorAll('.testimonial-card');
+
+let currentSlide = 0;
+let cardsPerView = 3;
+let autoplayInterval;
+
+function getCardsPerView() {
+    if (window.innerWidth <= 768) return 1;
+    if (window.innerWidth <= 1024) return 2;
+    return 3;
+}
+
+function getTotalSlides() {
+    return Math.max(1, cards.length - cardsPerView + 1);
+}
+
+function buildDots() {
+    dotsContainer.innerHTML = '';
+    const total = getTotalSlides();
+    for (let i = 0; i < total; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'testimonials__dot' + (i === currentSlide ? ' active' : '');
+        dot.setAttribute('aria-label', `Go to testimonial ${i + 1}`);
+        dot.addEventListener('click', () => goToSlide(i));
+        dotsContainer.appendChild(dot);
+    }
+}
+
+function goToSlide(index) {
+    const total = getTotalSlides();
+    currentSlide = Math.max(0, Math.min(index, total - 1));
+    const card = cards[0];
+    const gap = 24;
+    const cardWidth = card.offsetWidth + gap;
+    track.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
+    updateDots();
+    resetAutoplay();
+}
+
+function updateDots() {
+    dotsContainer.querySelectorAll('.testimonials__dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+    });
+}
+
+function nextSlide() {
+    const total = getTotalSlides();
+    goToSlide(currentSlide >= total - 1 ? 0 : currentSlide + 1);
+}
+
+function prevSlide() {
+    const total = getTotalSlides();
+    goToSlide(currentSlide <= 0 ? total - 1 : currentSlide - 1);
+}
+
+function resetAutoplay() {
+    clearInterval(autoplayInterval);
+    autoplayInterval = setInterval(nextSlide, 5000);
+}
+
+nextBtn.addEventListener('click', nextSlide);
+prevBtn.addEventListener('click', prevSlide);
+
+// Touch/swipe support
+let touchStartX = 0;
+let touchEndX = 0;
+track.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+track.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 50) {
+        diff > 0 ? nextSlide() : prevSlide();
+    }
+});
+
+// Recalculate on resize
+window.addEventListener('resize', () => {
+    const newPerView = getCardsPerView();
+    if (newPerView !== cardsPerView) {
+        cardsPerView = newPerView;
+        currentSlide = Math.min(currentSlide, getTotalSlides() - 1);
+        buildDots();
+        goToSlide(currentSlide);
+    }
+});
+
+// Init
+cardsPerView = getCardsPerView();
+buildDots();
+resetAutoplay();
+
 // ===== SMOOTH SCROLL FOR ALL ANCHOR LINKS =====
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
