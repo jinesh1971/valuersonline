@@ -36,6 +36,7 @@ body {
     background: var(--bg);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
 .container {
@@ -811,9 +812,15 @@ select.form__input {
     .footer__grid {
         grid-template-columns: repeat(2, 1fr);
     }
+    .contact__grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
     .nav__menu, .nav__cta {
         display: none;
     }
@@ -828,64 +835,179 @@ select.form__input {
         padding: 16px 24px;
         border-bottom: 1px solid var(--border);
         box-shadow: var(--shadow);
+        z-index: 1000;
+    }
+    .nav__menu.active .nav__link {
+        padding: 12px 16px;
+        font-size: 1rem;
+        width: 100%;
     }
     .nav__toggle {
         display: flex;
     }
+    /* Hamburger animation */
+    .nav__toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    .nav__toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .nav__toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
     .hero {
-        padding: 120px 0 60px;
+        padding: 110px 0 50px;
+    }
+    .hero__badge {
+        font-size: 0.7rem;
+        padding: 6px 14px;
     }
     .hero__title {
-        font-size: 2.2rem;
+        font-size: 2rem;
+    }
+    .hero__subtitle {
+        font-size: 1rem;
+        margin-bottom: 28px;
+    }
+    .hero__actions {
+        flex-direction: column;
+        margin-bottom: 40px;
+    }
+    .hero__actions .btn {
+        text-align: center;
+        width: 100%;
     }
     .hero__trust {
-        flex-direction: column;
-        gap: 16px;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 28px;
+    }
+    .trust-number {
+        font-size: 1.4rem;
+    }
+    .trust-label {
+        font-size: 0.7rem;
     }
     .trust-divider {
-        width: 40px;
-        height: 1px;
+        width: 1px;
+        height: 32px;
     }
     .section {
         padding: 60px 0;
+    }
+    .section__header {
+        margin-bottom: 36px;
+    }
+    .section__desc {
+        font-size: 0.95rem;
     }
     .services__grid,
     .about__grid,
     .why__grid {
         grid-template-columns: 1fr;
+        gap: 16px;
     }
     .process__grid {
         grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .accepted {
+        padding: 50px 0;
     }
     .accepted__grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    .accepted__item {
+        padding: 16px 10px;
+        font-size: 0.78rem;
     }
     .contact__grid {
         grid-template-columns: 1fr;
+        gap: 24px;
     }
     .contact__form {
-        padding: 24px;
+        padding: 20px;
     }
     .form__row {
         grid-template-columns: 1fr;
+        gap: 0;
+    }
+    .btn--lg {
+        padding: 14px 24px;
+        font-size: 0.95rem;
     }
     .footer__grid {
         grid-template-columns: 1fr;
-        gap: 32px;
+        gap: 28px;
     }
-    .hero__actions {
-        flex-direction: column;
+    .footer {
+        padding: 40px 0 0;
     }
-    .hero__actions .btn {
-        text-align: center;
+    .footer__bottom {
+        font-size: 0.72rem;
+        padding: 16px 0;
+    }
+    /* Move back-to-top above WhatsApp on mobile */
+    .back-to-top {
+        bottom: 90px;
+        right: 24px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        bottom: 20px;
+        right: 20px;
+    }
+    .whatsapp-float svg {
+        width: 26px;
+        height: 26px;
     }
 }
 
-@media (max-width: 480px) {
-    .accepted__grid {
-        grid-template-columns: 1fr 1fr;
-    }
+@media (max-width: 380px) {
     .hero__title {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+    }
+    .hero__trust {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+    }
+    .trust-divider {
+        width: 40px;
+        height: 1px;
+    }
+    .accepted__grid {
+        grid-template-columns: 1fr;
+    }
+    .contact__form {
+        padding: 16px;
+    }
+    .contact__info-card {
+        padding: 20px;
+    }
+}
+
+/* Touch-friendly tap targets */
+@media (hover: none) and (pointer: coarse) {
+    .nav__link {
+        padding: 12px 16px;
+        min-height: 44px;
+    }
+    .btn {
+        min-height: 48px;
+    }
+    .form__input {
+        padding: 14px 16px;
+        font-size: 16px; /* prevents iOS zoom on focus */
+    }
+    .service-card:hover,
+    .about__card:hover {
+        transform: none;
     }
 }
